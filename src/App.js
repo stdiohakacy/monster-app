@@ -2,16 +2,17 @@ import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react';
 import { CardList } from './components/card-list/card-list.component';
+import { SearchBox } from './components/search-box/search-box.component';
 
 class App extends Component {
     constructor() {
         super()
         this.state = {
-            monsters: []
+            monsters: [],
+            searchField: ''
         }
     }
 
-    // https://jsonplaceholder.typicode.com/users
     componentDidMount() {
         fetch('https://jsonplaceholder.typicode.com/users')
             .then(res => res.json())
@@ -19,9 +20,15 @@ class App extends Component {
     }
 
     render() {
+        const { monsters, searchField } = this.state
+        const filteredMonster = monsters.filter(monster => monster.name.toLowerCase().includes(searchField.toLocaleLowerCase()))
         return (
             <div className="App">
-                <CardList monsters={this.state.monsters} />
+                <SearchBox
+                    placeholder="search monsters"
+                    handleChange={e => this.setState({ searchField: e.target.value })}
+                />
+                <CardList monsters={filteredMonster} />
             </div>
         )
     }
